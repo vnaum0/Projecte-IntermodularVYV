@@ -1,29 +1,12 @@
-import * as React from 'react';
-import { StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-
-import MapaConBubble from './src/screens/MapaConBubble';
-import DetalleRestaurante from './src/screens/DetalleRestauranteScreen';
-
-const Stack = createStackNavigator();
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Mapa">
-        <Stack.Screen
-          name="Mapa"
-          component={MapaConBubble}
-          options={{ title: 'Mapa de Restaurantes' }}
-        />
-        <Stack.Screen
-          name="DetalleRestaurante"
-          component={DetalleRestaurante}
-          options={{ title: 'Detalle Restaurante' }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <View style={styles.container}>
+      <Text>Open up App.js to start working on your app!</Text>
+      <StatusBar style="auto" />
+    </View>
   );
 }
 
