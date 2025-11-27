@@ -7,17 +7,42 @@ export default function ReviewsList({ reviews }) {
     return <Text style={styles.noReviews}>No hay reviews todavía.</Text>;
   }
 
+  // Formato dd/mm/yyyy
+  const formatFecha = (firebaseFecha) => {
+    if (!firebaseFecha) return "";
+
+    // Si es Timestamp de Firestore
+    const dateObj = firebaseFecha.toDate
+      ? firebaseFecha.toDate()
+      : new Date(firebaseFecha);
+
+    const dia = String(dateObj.getDate()).padStart(2, "0");
+    const mes = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const anyo = dateObj.getFullYear();
+
+    return `${dia}/${mes}/${anyo}`;
+  };
+
   return (
     <View style={styles.reviewsContainer}>
       <Text style={styles.sectionTitle}>Reseñas:</Text>
+
       {reviews.map((review, index) => (
         <View key={index} style={styles.reviewCard}>
-          <Text style={styles.reviewAuthor}>{review.nombreUsuario}</Text>
+
+          {/* Nombre + fecha */}
+          <View style={styles.headerRow}>
+            <Text style={styles.reviewAuthor}>{review.nombreUsuario}</Text>
+            <Text style={styles.reviewDate}>{formatFecha(review.fecha)}</Text>
+          </View>
+
           <Text style={styles.reviewText}>{review.comentario}</Text>
+
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <StarRating rating={review.puntuacion} size={14} />
             <Text style={styles.reviewRating}> ({review.puntuacion}/5)</Text>
           </View>
+
         </View>
       ))}
     </View>
@@ -25,8 +50,18 @@ export default function ReviewsList({ reviews }) {
 }
 
 const styles = StyleSheet.create({
-  reviewsContainer: { padding: 16, backgroundColor: '#e0f7fa', borderRadius: 8 },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 8 },
+  reviewsContainer: { 
+    padding: 16, 
+    backgroundColor: '#e0f7fa', 
+    borderRadius: 8 
+  },
+
+  sectionTitle: { 
+    fontSize: 16, 
+    fontWeight: 'bold', 
+    marginBottom: 8 
+  },
+
   reviewCard: {
     padding: 12,
     marginBottom: 12,
@@ -35,8 +70,36 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#c0c0c0',
   },
-  reviewAuthor: { fontWeight: 'bold', marginBottom: 4 },
-  reviewText: { fontSize: 14, marginBottom: 4 },
-  reviewRating: { fontSize: 12, color: '#555', marginLeft: 4 },
-  noReviews: { fontSize: 14, padding: 16 },
+
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',  // nombre izq — fecha der
+    marginBottom: 4,
+  },
+
+  reviewAuthor: { 
+    fontWeight: 'bold' 
+  },
+
+  reviewDate: { 
+    fontSize: 12, 
+    color: '#555',
+    textAlign: 'right'
+  },
+
+  reviewText: { 
+    fontSize: 14, 
+    marginBottom: 4 
+  },
+
+  reviewRating: { 
+    fontSize: 12, 
+    color: '#555', 
+    marginLeft: 4 
+  },
+
+  noReviews: { 
+    fontSize: 14, 
+    padding: 16 
+  },
 });
