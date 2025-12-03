@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '../Utils/Firebase';
+import { db } from '../Utils/firebaseConfig';
 import RestaurantInfo from '../components/RestaurantInfo';
 import ReviewsList from '../components/ReviewsList';
 
 export default function DetalleRestauranteScreen({ route }) {
-  const { restaurant } = route.params;
+  const { restaurant } = route?.params?.restaurant;
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(restaurant.averageRating || 0);
   const [reviewsAmount, setReviewsAmount] = useState(restaurant.reviewsAmount || 0);

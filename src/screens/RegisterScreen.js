@@ -13,8 +13,8 @@ import {
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { doc, setDoc, getDocs, collection, query, where } from "firebase/firestore";
-import { auth, db } from "./firebaseConfig";
-import { useTheme } from "./context/ThemeContext"; // 👈 Importamos el contexto
+import { auth, db } from "../Utils/firebaseConfig";
+import { useTheme } from "../context/ThemeContext"; // 👈 Importamos el contexto
 
 export default function RegisterScreen({ navigation }) {
   const { isDarkMode } = useTheme(); // 👈 Obtenemos el estado global

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../Utils/Firebase";
+import { db } from "../Utils/firebaseConfig";
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function RestaurantBubble({ data }) {

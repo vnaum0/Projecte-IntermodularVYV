@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../Utils/Firebase";
+import { db } from "../Utils/firebaseConfig";
 
 export default function RestaurantCard({ id, nomRestaurant, city, imatgePrincipal }) {
     const [averageRating, setAverageRating] = useState(0);

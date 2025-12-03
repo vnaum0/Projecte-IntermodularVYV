@@ -4,7 +4,7 @@ import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
-import StarRating from "./StarRating";
+import StarRating from "../components/StarRating";
 
 export default function FiltersScreen() {
   const navigation = useNavigation(); // ✅ para poder navegar

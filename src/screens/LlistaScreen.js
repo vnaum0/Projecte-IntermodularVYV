@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../Utils/Firebase";
-import RestaurantCard from "./RestaurantCard";
+import { db } from "../Utils/firebaseConfig";
+import RestaurantCard from "../components/RestaurantCard"; // Asegúrate de que la ruta sea correcta
 
 export default function Llista() {
     const [restaurants, setRestaurants] = useState([]);
@@ -21,7 +21,7 @@ export default function Llista() {
     }, []);
 
     return (
-        <View>
+        <View style={styles.container}>
             <FlatList
                 data={restaurants}
                 keyExtractor={(item) => item.id}
@@ -37,3 +37,10 @@ export default function Llista() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 10
+  }
+});
