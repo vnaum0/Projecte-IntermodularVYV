@@ -42,7 +42,7 @@ export default function LoginScreen({ navigation }) {
       await signInWithEmailAndPassword(auth, email, password);
 
       Alert.alert('Success', 'Logged in successfully!');
-      navigation.navigate('MainMenu');
+      navigation.navigate('Switch');
     } catch (error) {
       console.log(error);
       if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {

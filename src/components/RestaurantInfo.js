@@ -3,56 +3,72 @@ import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import StarRating from './StarRating';
 
-export default function RestaurantInfo({ restaurant, averageRating, reviewsAmount }) {
-  const images = restaurant.imatgePrincipal ? [restaurant.imatgePrincipal] : [];
+export default function RestaurantInfo({ restaurant = {}, averageRating = 0, reviewsAmount = 0 }) {
+  // Desestructuramos con valores por defecto
+  const {
+    nomRestaurant = 'Sin nombre',
+    direccio = 'No disponible',
+    phone = 'No disponible',
+    price = 'No disponible',
+    imatgePrincipal,
+    coordinate,
+  } = restaurant;
+
+  const images = imatgePrincipal ? [imatgePrincipal] : [];
 
   return (
     <View style={styles.infoContainer}>
-      <Text style={styles.name}>{restaurant.nomRestaurant}</Text>
+      {/* Nombre del restaurante */}
+      <Text style={styles.name}>{nomRestaurant}</Text>
 
       {/* Valoración */}
       <View style={styles.ratingContainer}>
         <Text style={styles.ratingText}>Valoración: </Text>
-        <StarRating rating={averageRating} size={20} />
+        <StarRating rating={averageRating || 0} size={20} />
         <Text style={styles.ratingText}>
-          ({averageRating.toFixed(1)}/5), {reviewsAmount} valoraciones
+          ({(averageRating || 0).toFixed(1)}/5), {reviewsAmount || 0} valoraciones
         </Text>
       </View>
 
+      {/* Dirección */}
       <Text style={styles.sectionTitle}>Dirección:</Text>
-      <Text style={styles.text}>{restaurant.direccio || 'No disponible'}</Text>
+      <Text style={styles.text}>{direccio}</Text>
 
       {/* Mapa */}
-      {restaurant.coordinate && (
+      {coordinate && coordinate.latitude && coordinate.longitude && (
         <MapView
           style={styles.map}
           initialRegion={{
-            latitude: restaurant.coordinate.latitude,
-            longitude: restaurant.coordinate.longitude,
+            latitude: coordinate.latitude,
+            longitude: coordinate.longitude,
             latitudeDelta: 0.005,
             longitudeDelta: 0.005,
           }}
         >
           <Marker
             coordinate={{
-              latitude: restaurant.coordinate.latitude,
-              longitude: restaurant.coordinate.longitude,
+              latitude: coordinate.latitude,
+              longitude: coordinate.longitude,
             }}
-            title={restaurant.nomRestaurant}
+            title={nomRestaurant}
           />
         </MapView>
       )}
 
+      {/* Horario */}
       <Text style={styles.sectionTitle}>Horario:</Text>
       <Text style={styles.text}>Lunes 8:00 - 18:00</Text>
       <Text style={styles.text}>Viernes 8:00 - 18:00</Text>
 
+      {/* Teléfono */}
       <Text style={styles.sectionTitle}>Teléfono:</Text>
-      <Text style={styles.text}>{restaurant.phone || 'No disponible'}</Text>
+      <Text style={styles.text}>{phone}</Text>
 
+      {/* Precio */}
       <Text style={styles.sectionTitle}>Precio:</Text>
-      <Text style={styles.text}>{restaurant.price || 'No disponible'}</Text>
+      <Text style={styles.text}>{price}</Text>
 
+      {/* Imágenes */}
       {images.length > 0 && (
         <>
           <Text style={styles.sectionTitle}>Imágenes:</Text>
@@ -68,9 +84,19 @@ export default function RestaurantInfo({ restaurant, averageRating, reviewsAmoun
 }
 
 const styles = StyleSheet.create({
-  infoContainer: { padding: 16, backgroundColor: '#f8f8f8', borderRadius: 8, marginBottom: 16 },
+  infoContainer: {
+    padding: 16,
+    backgroundColor: '#f8f8f8',
+    borderRadius: 8,
+    marginBottom: 16,
+  },
   name: { fontSize: 24, fontWeight: 'bold', marginBottom: 8 },
-  ratingContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap' },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    flexWrap: 'wrap',
+  },
   ratingText: { fontSize: 16, marginRight: 4 },
   sectionTitle: { fontSize: 16, fontWeight: 'bold', marginTop: 12 },
   text: { fontSize: 14, marginBottom: 4 },

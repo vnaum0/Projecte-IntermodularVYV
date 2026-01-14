@@ -22,10 +22,9 @@ export default function App() {
     <ThemeProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="MainMenu"
+          initialRouteName="Login"
           screenOptions={{ headerShown: false }}
         >
-          <Stack.Screen name="MainMenu" component={MainMenuScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="Review" component={ReviewScreen} />

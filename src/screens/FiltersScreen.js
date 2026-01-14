@@ -1,13 +1,23 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+} from "react-native";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import Slider from "@react-native-community/slider";
-import { Ionicons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
-import { useNavigation } from "@react-navigation/native";
 import StarRating from "../components/StarRating";
+import SettingsButton from "../components/SettingsButton";
+import { useTheme } from "../context/ThemeContext";
 
 export default function FiltersScreen() {
-  const navigation = useNavigation(); // ✅ para poder navegar
+  const { isDarkMode } = useTheme();
   const [rating, setRating] = useState(5);
   const [distance, setDistance] = useState(50);
   const [price, setPrice] = useState(null);
@@ -32,195 +42,201 @@ export default function FiltersScreen() {
     );
   };
 
+  const themeStyles = isDarkMode ? darkStyles : lightStyles;
+
   return (
-    <ScrollView
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-        paddingHorizontal: 20,
-        paddingTop: 50,
-      }}
-    >
-      {/* Header */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 20,
-        }}
-      >
-        {/* 🔙 Botón atrás */}
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={24} color="black" />
-        </TouchableOpacity>
-
-        <Text style={{ fontSize: 18, fontWeight: "bold" }}>Main Menu</Text>
-
-        {/* ⚙️ Botón de ajustes */}
-        <TouchableOpacity onPress={() => navigation.navigate("Settings")}>
-          <Ionicons name="settings-outline" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Tabs */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          marginBottom: 20,
-        }}
-      >
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#eee",
-            borderRadius: 20,
-            paddingVertical: 8,
-            paddingHorizontal: 20,
-            marginHorizontal: 5,
-          }}
-        >
-          <Text>Map</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            backgroundColor: "#eee",
-            borderRadius: 20,
-            paddingVertical: 8,
-            paddingHorizontal: 20,
-            marginHorizontal: 5,
-          }}
-        >
-          <Text>List</Text>
-        </TouchableOpacity>
-        <Ionicons
-          name="filter"
-          size={22}
-          color="black"
-          style={{ marginLeft: 10, marginTop: 5 }}
+    <SafeAreaProvider>
+      <SafeAreaView style={[styles.safeArea, { backgroundColor: isDarkMode ? "#121212" : "#fff" }]}>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle={isDarkMode ? "light-content" : "dark-content"}
         />
-      </View>
-
-      {/* Qualification */}
-      <Text style={{ fontWeight: "bold", marginBottom: 8 }}>Qualification</Text>
-      <View style={{ marginBottom: 20 }}>
-        <StarRating
-          maxStars={5}
-          rating={rating}
-          onChangeRating={setRating}
-          size={30}
-          color="#FFD700"
-          emptyColor="#CCCCCC"
-        />
-      </View>
-
-      {/* Distance */}
-      <Text style={{ fontWeight: "bold", marginBottom: 8 }}>Distance</Text>
-      <Slider
-        minimumValue={0}
-        maximumValue={100}
-        value={distance}
-        step={1}
-        onValueChange={setDistance}
-        minimumTrackTintColor="#7b5cff"
-        maximumTrackTintColor="#ddd"
-      />
-      <Text style={{ textAlign: "center", marginBottom: 20 }}>
-        {distance} km
-      </Text>
-
-      {/* Price */}
-      <Text style={{ fontWeight: "bold", marginBottom: 8 }}>Price:</Text>
-      <View style={{ flexDirection: "row", marginBottom: 20 }}>
-        {["Low", "Mid", "Alto"].map((level) => (
-          <TouchableOpacity
-            key={level}
-            style={{
-              backgroundColor: price === level ? "#007bff" : "#eee",
-              borderRadius: 20,
-              paddingVertical: 8,
-              paddingHorizontal: 20,
-              marginHorizontal: 5,
-            }}
-            onPress={() => setPrice(level)}
+        <KeyboardAvoidingView
+          style={{ flex: 1 }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+        >
+          <ScrollView
+            contentContainerStyle={[themeStyles.container, { backgroundColor: isDarkMode ? "#121212" : "#fff" }]}
           >
-            <Text style={{ color: price === level ? "#fff" : "#000" }}>
-              {level}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+            {/* Header */}
+            <SettingsButton title="Filters" showBack />
 
-      {/* Exterior sits */}
-      <Text style={{ fontWeight: "bold", marginBottom: 8 }}>Exterior sits:</Text>
-      <View style={{ flexDirection: "row", marginBottom: 20 }}>
-        {["Yes", "No"].map((opt) => (
-          <TouchableOpacity
-            key={opt}
-            style={{
-              backgroundColor:
-                exterior === (opt === "Yes") ? "#007bff" : "#eee",
-              borderRadius: 20,
-              paddingVertical: 8,
-              paddingHorizontal: 20,
-              marginHorizontal: 5,
-            }}
-            onPress={() => setExterior(opt === "Yes")}
-          >
-            <Text
-              style={{
-                color: exterior === (opt === "Yes") ? "#fff" : "#000",
-              }}
-            >
-              {opt}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+            {/* Qualification */}
+            <Text style={themeStyles.label}>Qualification</Text>
+            <StarRating
+              maxStars={5}
+              rating={rating}
+              onChangeRating={setRating}
+              size={30}
+              color="#FFD700"
+              emptyColor={isDarkMode ? "#555" : "#CCC"}
+            />
 
-      {/* City */}
-      <Text style={{ fontWeight: "bold", marginBottom: 8 }}>City:</Text>
-      <View
-        style={{
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 8,
-          marginBottom: 20,
-        }}
-      >
-        <Picker selectedValue={city} onValueChange={setCity}>
-          <Picker.Item label="Manresa" value="Manresa" />
-          <Picker.Item label="Barcelona" value="Barcelona" />
-          <Picker.Item label="Madrid" value="Madrid" />
-        </Picker>
-      </View>
+            {/* Distance */}
+            <Text style={themeStyles.label}>Distance</Text>
+            <Slider
+              minimumValue={0}
+              maximumValue={100}
+              value={distance}
+              step={1}
+              onValueChange={setDistance}
+              minimumTrackTintColor="#7b5cff"
+              maximumTrackTintColor={isDarkMode ? "#555" : "#ddd"}
+            />
+            <Text style={[themeStyles.valueText]}>{distance} km</Text>
 
-      {/* Food */}
-      <Text style={{ fontWeight: "bold", marginBottom: 8 }}>Food:</Text>
-      <View
-        style={{ flexDirection: "row", flexWrap: "wrap", marginBottom: 40 }}
-      >
-        {foodOptions.map((food) => {
-          const selected = selectedFoods.includes(food);
-          return (
-            <TouchableOpacity
-              key={food}
-              onPress={() => toggleFood(food)}
-              style={{
-                backgroundColor: selected ? "#007bff" : "#eee",
-                borderRadius: 20,
-                paddingVertical: 8,
-                paddingHorizontal: 15,
-                margin: 5,
-              }}
-            >
-              <Text style={{ color: selected ? "#fff" : "#000" }}>
-                {food} {selected ? "✕" : ""}
-              </Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </ScrollView>
+            {/* Price */}
+            <Text style={themeStyles.label}>Price:</Text>
+            <View style={themeStyles.row}>
+              {["Low", "Mid", "High"].map((level) => (
+                <TouchableOpacity
+                  key={level}
+                  style={[
+                    themeStyles.optionBtn,
+                    price === level && themeStyles.optionSelected,
+                  ]}
+                  onPress={() => setPrice(level)}
+                >
+                  <Text style={themeStyles.optionText(level === price)}>{level}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* Exterior */}
+            <Text style={themeStyles.label}>Exterior sits:</Text>
+            <View style={themeStyles.row}>
+              {["Yes", "No"].map((opt) => (
+                <TouchableOpacity
+                  key={opt}
+                  style={[
+                    themeStyles.optionBtn,
+                    exterior === (opt === "Yes") && themeStyles.optionSelected,
+                  ]}
+                  onPress={() => setExterior(opt === "Yes")}
+                >
+                  <Text style={themeStyles.optionText(exterior === (opt === "Yes"))}>
+                    {opt}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            {/* City */}
+            <Text style={themeStyles.label}>City:</Text>
+            <View style={[themeStyles.pickerContainer, { borderColor: isDarkMode ? "#555" : "#ccc" }]}>
+              <Picker
+                selectedValue={city}
+                onValueChange={setCity}
+                style={{ color: isDarkMode ? "#fff" : "#000" }}
+              >
+                <Picker.Item label="Manresa" value="Manresa" />
+                <Picker.Item label="Barcelona" value="Barcelona" />
+                <Picker.Item label="Madrid" value="Madrid" />
+              </Picker>
+            </View>
+
+            {/* Food */}
+            <Text style={themeStyles.label}>Food:</Text>
+            <View style={themeStyles.foodContainer}>
+              {foodOptions.map((food) => {
+                const selected = selectedFoods.includes(food);
+                return (
+                  <TouchableOpacity
+                    key={food}
+                    onPress={() => toggleFood(food)}
+                    style={[
+                      themeStyles.foodBtn,
+                      selected && themeStyles.foodSelected,
+                    ]}
+                  >
+                    <Text style={themeStyles.foodText(selected)}>
+                      {food} {selected ? "✕" : ""}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
+
+const baseStyles = {
+  row: { flexDirection: "row", marginBottom: 20, flexWrap: "wrap" },
+  foodContainer: { flexDirection: "row", flexWrap: "wrap", marginBottom: 40 },
+};
+
+const lightStyles = StyleSheet.create({
+  ...baseStyles,
+  container: { paddingHorizontal: 20, paddingBottom: 50 },
+  label: { fontWeight: "bold", marginBottom: 8, color: "#000", marginTop: 20 },
+  valueText: { textAlign: "center", marginBottom: 20, color: "#000" },
+  row: { flexDirection: "row", marginBottom: 20, flexWrap: "wrap" },
+  optionBtn: {
+    backgroundColor: "#eee",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    marginHorizontal: 5,
+    marginBottom: 10,
+  },
+  optionSelected: { backgroundColor: "#007bff" },
+  optionText: (selected = false) => ({
+    color: selected ? "#fff" : "#000",
+  }),
+  pickerContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  foodBtn: {
+    backgroundColor: "#eee",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    margin: 5,
+  },
+  foodSelected: { backgroundColor: "#007bff" },
+  foodText: (selected = false) => ({ color: selected ? "#fff" : "#000" }),
+});
+
+const darkStyles = StyleSheet.create({
+  ...baseStyles,
+  container: { paddingHorizontal: 20, paddingBottom: 50 },
+  label: { fontWeight: "bold", marginBottom: 8, color: "#fff", marginTop: 20 },
+  valueText: { textAlign: "center", marginBottom: 20, color: "#fff" },
+  row: { flexDirection: "row", marginBottom: 20, flexWrap: "wrap" },
+  optionBtn: {
+    backgroundColor: "#2a2a2a",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    marginHorizontal: 5,
+    marginBottom: 10,
+  },
+  optionSelected: { backgroundColor: "#007bff" },
+  optionText: (selected = false) => ({
+    color: selected ? "#fff" : "#fff",
+  }),
+  pickerContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 20,
+  },
+  foodBtn: {
+    backgroundColor: "#2a2a2a",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    margin: 5,
+  },
+  foodSelected: { backgroundColor: "#007bff" },
+  foodText: (selected = false) => ({ color: selected ? "#fff" : "#fff" }),
+});
+
+const styles = StyleSheet.create({
+  safeArea: { flex: 1 },
+});
